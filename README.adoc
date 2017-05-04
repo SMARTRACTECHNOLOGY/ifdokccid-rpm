@@ -20,7 +20,7 @@ ifdef::env-github[]
 :warning-caption: :warning:
 endif::[]
 
-RPM Spec file for https://github.com/oblique/create_ap[create_ap]
+RPM Spec file for the HID NFC Reader drivers.
 
 == Building
 
@@ -46,7 +46,7 @@ This RPM is included in the Lifecycles Base Repository, so assuming that is prop
 
 [source, bash]
 ----
-sudo dnf install -y create_ap
+sudo dnf install -y ifdokccid
 ----
 
 This file will also be installed as part of a gateway kickstart.

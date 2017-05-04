@@ -4,3 +4,4 @@ create_ap*/
 noarch/
 *.tar.gz
 ifdokccid_linux_x86_64-*/
+*.orig

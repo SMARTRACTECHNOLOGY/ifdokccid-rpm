@@ -1,4 +1,4 @@
-Name:           hid-omnikey-5421-pcsc-drivers
+Name:           ifdokccid
 Version:        4.0.5.5
 Release:        1
 Summary:        Lifecycles HID OMNIKEY 5421 PCSC Drivers Configuration
@@ -10,7 +10,8 @@ Packager:       Smartrac Technology Fletcher, Inc.
 URL:            https://lifecycles.io
 BuildArch:      x86_64
 
-Source0:        https://www.hidglobal.com/sites/default/files/drivers/ifdokccid_linux_x86_64-v%{version}.tar.gz
+Source0:        https://www.hidglobal.com/sites/default/files/drivers/%{name}_linux_%{buildarch}-v%{version}.tar.gz
+Source1:        Info.plist
 
 Requires:       bash
 Requires:       libusb
@@ -24,17 +25,34 @@ BuildRequires:  systemd
 %description
 Lifecycles HID OMNIKEY 5421 PCSC Drivers and PCSC Configuration
 
+%clean
+echo "Cleaning ..."
+rm -rf %{buildroot}
+
 %prep
-%autosetup
+echo "Prep ..."
+# Auto extract the tar gz file
+%setup -q
+
+install -m644 %{_topdir}/Info.plist %{_sourcedir}
 
 %build
 echo "Nothing to build"
 
 %install
-%make_install
+
+# Install HID OMNIKey Drivers
+./install
+
+# Create PCSC driver data directory
+install -d -m777 -p %{buildroot}/usr/lib64/pcsc/drivers/ifd-ccid.bundle/Contents
+
+# Copy corrected Info.plist to PCSC driver data directory
+install -m644 %{_sourcedir}/Info.plist %{buildroot}/usr/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist
+
 
 %files
-
+/usr/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist
 
 %post
 %systemd_post pcscd.service
