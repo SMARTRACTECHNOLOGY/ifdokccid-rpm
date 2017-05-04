@@ -32,7 +32,7 @@ rm -rf %{buildroot}
 %prep
 echo "Prep ..."
 # Auto extract the tar gz file
-%setup -q -n %{Source0}
+%setup -q 
 
 install -m644 %{_topdir}/Info.plist %{_sourcedir}
 
