@@ -5,13 +5,13 @@ Summary:        Lifecycles HID OMNIKEY 5421 PCSC Drivers Configuration
 
 Group:          System Environment/Base
 License:        Commercial Private License
-Vendor:         Smartrac Technology Fletcher, Inc.
+Vendor:         SMARTRACTECHNOLOGY
 Packager:       Smartrac Technology Fletcher, Inc.
 URL:            https://lifecycles.io
 BuildArch:      x86_64
 
 Source0:        https://www.hidglobal.com/sites/default/files/drivers/ifdokccid_linux_x86_64-v4.0.5.5.tar.gz
-Source1:        Info.plist
+Source1:        https://github.com/SMARTRACTECHNOLOGY/rpm-hid-omnikey-5421-pcsc-drivers/blob/master/Info.plist
 
 Requires:       bash
 Requires:       libusb
@@ -33,7 +33,7 @@ rm -rf %{buildroot}
 echo "Prep ..."
 # Auto extract the tar gz file
 #%autosetup
-%setup -q -n ifdokccid_linux_x86_64-%{version}
+%setup -q -n %{Source0}
 
 %build
 echo "Nothing to build"
@@ -47,7 +47,7 @@ echo "Nothing to build"
 install -d -m655 -p /usr/lib64/pcsc/drivers/ifd-ccid.bundle/Contents
 
 # Copy corrected Info.plist to PCSC driver data directory
-install -m 0644 %{Source1}/Info.plist %{buildroot}/usr/lib64/pcsc/drivers/ifd-ccid.bundle/Contents
+install -m 0644 %{Source1} %{buildroot}/usr/lib64/pcsc/drivers/ifd-ccid.bundle/Contents
 
 
 %files
