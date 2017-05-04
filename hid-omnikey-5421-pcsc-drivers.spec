@@ -10,7 +10,7 @@ Packager:       Smartrac Technology Fletcher, Inc.
 URL:            https://lifecycles.io
 BuildArch:      x86_64
 
-Source0:        ifdokccid_linux_x86_64-v4.0.5.5.tar.gz
+Source0:        https://www.hidglobal.com/sites/default/files/drivers/ifdokccid_linux_x86_64-v4.0.5.5.tar.gz
 Source1:        Info.plist
 
 Requires:       bash
