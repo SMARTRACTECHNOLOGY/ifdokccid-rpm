@@ -32,7 +32,7 @@ rm -rf %{buildroot}
 %prep
 echo "Prep ..."
 # Auto extract the tar gz file
-%setup -q 
+%setup -q
 
 install -m644 %{_topdir}/Info.plist %{_sourcedir}
 
@@ -45,16 +45,14 @@ echo "Nothing to build"
 ./install
 
 # Create PCSC driver data directory
-install -d -m655 -p /usr/lib64/pcsc/drivers/ifd-ccid.bundle/Contents
+install -d -m777 -p %{buildroot}/usr/lib64/pcsc/drivers/ifd-ccid.bundle/Contents
 
 # Copy corrected Info.plist to PCSC driver data directory
-install -m644 %{_sourcedir}/Info.plist %{buildroot}/usr/lib64/pcsc/drivers/ifd-ccid.bundle/Contents
+install -m644 %{_sourcedir}/Info.plist %{buildroot}/usr/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist
 
 
 %files
-/usr/lib64/pcsc/drivers/ifdokccid_linux_x86_64-v4.0.5.5.bundle/Contents/Linux/ifdokccid.so
-/usr/lib64/pcsc/drivers/ifdokccid_linux_x86_64-v4.0.5.5.bundle/Contents/Info.plist
-
+/usr/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist
 
 %post
 %systemd_post pcscd.service
