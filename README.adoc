@@ -1,0 +1,6 @@
+
+
+= Building
+spectool -g --directory ./SOURCES/  hid-omnikey-5421-pcsc-drivers.spec
+
+rpmbuild --define "_topdir `pwd`" -ba hid-omnikey-5421-pcsc-drivers.spec
