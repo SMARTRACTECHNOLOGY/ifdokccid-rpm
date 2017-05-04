@@ -1,0 +1,52 @@
+= Create AP RPM
+SMARTRAC Technology Fletcher Inc <api@smartrac-group.com>
+// Settings:
+:experimental:
+:idprefix:
+:idseparator: -
+ifndef::env-github[:icons: font]
+ifdef::env-github,env-browser[]
+:toc: macro
+:toclevels: 1
+endif::[]
+ifdef::env-github[]
+:status:
+:outfilesuffix: .adoc
+:!toc-title:
+:caution-caption: :fire:
+:important-caption: :exclamation:
+:note-caption: :paperclip:
+:tip-caption: :bulb:
+:warning-caption: :warning:
+endif::[]
+
+RPM Spec file for https://github.com/oblique/create_ap[create_ap]
+
+== Building
+
+NOTE: This assumes you already copied the `build-rpm.sh` script from https://github.com/SMARTRACTECHNOLOGY/rpmdevtools-docker[rpmdevtools-docker] to a `${PATH}` accessible place.
+
+First you need to get the source code, which if you're on a Linux system can be done by running:
+
+[source, bash]
+----
+spectool -g *spec
+----
+
+Otherwise, just get the `Source0` field and download the tarball.
+
+[source, bash]
+----
+build-rpm
+----
+
+== Installation
+
+This RPM is included in the Lifecycles Base Repository, so assuming that is properly configured, you can just install it with:
+
+[source, bash]
+----
+sudo dnf install -y create_ap
+----
+
+This file will also be installed as part of a gateway kickstart.
