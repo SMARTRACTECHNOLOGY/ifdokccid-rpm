@@ -47,7 +47,7 @@ echo "Nothing to build"
 install -d -m655 -p /usr/lib64/pcsc/drivers/ifd-ccid.bundle/Contents
 
 # Copy corrected Info.plist to PCSC driver data directory
-install -m 0644 %{Source1} %{buildroot}/usr/lib64/pcsc/drivers/ifd-ccid.bundle/Contents
+install -m644 %{Source1} %{buildroot}/usr/lib64/pcsc/drivers/ifd-ccid.bundle/Contents
 
 
 %files
