@@ -48,7 +48,7 @@ QA_RPATHS=$(( 0x0001|0x0002|0x0010 ))
 # Install the omnikey.ini file
 #
 install -d -m755 -p %{buildroot}/%{_sysconfdir}
-install -m600 %{_builddir}/%{name}_%{buildarch}-%{version}/omnikey.ini %{buildroot}/%{_sysconfdir}/omnikey.ini
+install -m600 %{_builddir}/%{name}_%{buildarch}-v%{version}/omnikey.ini %{buildroot}/%{_sysconfdir}/omnikey.ini
 
 #
 # Install the bundle
