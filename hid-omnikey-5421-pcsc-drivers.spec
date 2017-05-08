@@ -1,5 +1,5 @@
 Name:           ifdokccid_linux
-Version:        v4.0.5.5
+Version:        4.0.5.5
 Release:        1
 Summary:        Lifecycles HID OMNIKEY 5421 PCSC Drivers Configuration
 
@@ -10,7 +10,7 @@ Packager:       Smartrac Technology Fletcher, Inc.
 URL:            https://lifecycles.io
 BuildArch:      x86_64
 
-Source0:        https://www.hidglobal.com/sites/default/files/drivers/ifdokccid_linux_x86_64-v4.0.5.5.tar.gz
+Source0:        https://www.hidglobal.com/sites/default/files/drivers/%{name}_%{buildarch}-v%{version}.tar.gz
 Source1:        Info.plist.patch1
 
 Requires:       bash
@@ -34,7 +34,7 @@ rm -rf %{buildroot}
 %prep
 echo "Prep ..."
 # Auto extract the tar gz file
-%setup -q -n %{name}_%{buildarch}-%{version}
+%setup -q -n %{name}_%{buildarch}-v%{version}
 
 #install -m644 %{_topdir}/Info.plist.patch1 %{_sourcedir}
 
@@ -54,13 +54,13 @@ install -m600 %{_builddir}/%{name}_%{buildarch}-%{version}/omnikey.ini %{buildro
 # Install the bundle
 #
 install -d -m775 -p %{buildroot}/usr/lib64/pcsc/drivers/
-cp -r %{_builddir}/%{name}_%{buildarch}-%{version}/%{name}_%{buildarch}-%{version}.bundle %{buildroot}/usr/lib64/pcsc/drivers/
+cp -r %{_builddir}/%{name}_%{buildarch}-v%{version}/%{name}_%{buildarch}-v%{version}.bundle %{buildroot}/usr/lib64/pcsc/drivers/
 
 #
 # Install udev rules
 #
 install -d -m755 -p %{buildroot}/%{_sysconfdir}/udev/rules.d/
-install -m600 %{_builddir}/%{name}_%{buildarch}-%{version}/z98_omnikey.rules %{buildroot}/%{_sysconfdir}/udev/rules.d/z98_omnikey.rules
+install -m600 %{_builddir}/%{name}_%{buildarch}-v%{version}/z98_omnikey.rules %{buildroot}/%{_sysconfdir}/udev/rules.d/z98_omnikey.rules
 
 #
 # Copy corrected Info.plist to PCSC driver data directory
@@ -72,8 +72,8 @@ install -m644 %{_sourcedir}/Info.plist.patch1 %{buildroot}/%{_prefix}/lib64/pcsc
 %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist.patch1
 %{_sysconfdir}/omnikey.ini
 %{_sysconfdir}/udev/rules.d/z98_omnikey.rules
-%{_prefix}/lib64/pcsc/drivers/%{name}_%{buildarch}-%{version}.bundle/Contents/Info.plist
-%{_prefix}/lib64/pcsc/drivers/%{name}_%{buildarch}-%{version}.bundle/Contents/Linux/ifdokccid.so
+%{_prefix}/lib64/pcsc/drivers/%{name}_%{buildarch}-v%{version}.bundle/Contents/Info.plist
+%{_prefix}/lib64/pcsc/drivers/%{name}_%{buildarch}-v%{version}.bundle/Contents/Linux/ifdokccid.so
 
 %post
 patch -p1 %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist < %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist.patch1
