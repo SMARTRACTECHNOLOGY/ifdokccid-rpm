@@ -36,7 +36,7 @@ echo "Prep ..."
 # Auto extract the tar gz file
 %setup -q
 
-install -m644 %{_topdir}/Info.plist %{_sourcedir}
+# install -m644 %{_topdir}/Info.plist %{_sourcedir}
 
 %build
 echo "Nothing to build"
