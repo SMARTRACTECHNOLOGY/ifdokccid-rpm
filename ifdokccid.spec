@@ -1,25 +1,21 @@
-Name:           ifdokccid_linux
+Name:           ifdokccid
 Version:        4.0.5.5
 Release:        1
-Summary:        Lifecycles HID OMNIKEY 5421 PCSC Drivers Configuration
+Summary:        HID OMNIKEY 5421 PCSC Drivers Configuration
 
 Group:          System Environment/Base
 License:        Commercial Private License
-Vendor:         SMARTRACTECHNOLOGY
+Vendor:         HID Global
 Packager:       Smartrac Technology Fletcher, Inc.
-URL:            https://lifecycles.io
+URL:            https://www.hidglobal.com
 BuildArch:      x86_64
 
-Source0:        https://www.hidglobal.com/sites/default/files/drivers/%{name}_%{buildarch}-v%{version}.tar.gz
+Source0:        https://www.hidglobal.com/sites/default/files/drivers/%{name}_linux_%{buildarch}-v%{version}.tar.gz
 Source1:        Info.plist.patch1
 
 Requires:       bash
 Requires:       libusb
-Requires:       lshw
 Requires:       pcsc-lite
-Requires:       fxload
-Requires:       pcsc-tools
-Requires:       java >= 1.8
 BuildRequires:  systemd
 
 %define debug_package %{nil}
@@ -34,7 +30,7 @@ rm -rf %{buildroot}
 %prep
 echo "Prep ..."
 # Auto extract the tar gz file
-%setup -q -n %{name}_%{buildarch}-v%{version}
+%setup -q -n %{name}_linux_%{buildarch}-v%{version}
 
 #install -m644 %{_topdir}/Info.plist.patch1 %{_sourcedir}
 
@@ -48,19 +44,19 @@ QA_RPATHS=$(( 0x0001|0x0002|0x0010 ))
 # Install the omnikey.ini file
 #
 install -d -m755 -p %{buildroot}/%{_sysconfdir}
-install -m600 %{_builddir}/%{name}_%{buildarch}-v%{version}/omnikey.ini %{buildroot}/%{_sysconfdir}/omnikey.ini
+install -m600 %{_builddir}/%{name}_linux_%{buildarch}-v%{version}/omnikey.ini %{buildroot}/%{_sysconfdir}/omnikey.ini
 
 #
 # Install the bundle
 #
 install -d -m775 -p %{buildroot}/usr/lib64/pcsc/drivers/
-cp -r %{_builddir}/%{name}_%{buildarch}-v%{version}/%{name}_%{buildarch}-v%{version}.bundle %{buildroot}/usr/lib64/pcsc/drivers/
+cp -r %{_builddir}/%{name}_linux_%{buildarch}-v%{version}/%{name}_linux_%{buildarch}-v%{version}.bundle %{buildroot}/usr/lib64/pcsc/drivers/
 
 #
 # Install udev rules
 #
 install -d -m755 -p %{buildroot}/%{_sysconfdir}/udev/rules.d/
-install -m600 %{_builddir}/%{name}_%{buildarch}-v%{version}/z98_omnikey.rules %{buildroot}/%{_sysconfdir}/udev/rules.d/z98_omnikey.rules
+install -m600 %{_builddir}/%{name}_linux_%{buildarch}-v%{version}/z98_omnikey.rules %{buildroot}/%{_sysconfdir}/udev/rules.d/z98_omnikey.rules
 
 #
 # Copy corrected Info.plist to PCSC driver data directory
@@ -72,8 +68,8 @@ install -m644 %{_sourcedir}/Info.plist.patch1 %{buildroot}/%{_prefix}/lib64/pcsc
 %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist.patch1
 %{_sysconfdir}/omnikey.ini
 %{_sysconfdir}/udev/rules.d/z98_omnikey.rules
-%{_prefix}/lib64/pcsc/drivers/%{name}_%{buildarch}-v%{version}.bundle/Contents/Info.plist
-%{_prefix}/lib64/pcsc/drivers/%{name}_%{buildarch}-v%{version}.bundle/Contents/Linux/ifdokccid.so
+%{_prefix}/lib64/pcsc/drivers/%{name}_linux_%{buildarch}-v%{version}.bundle/Contents/Info.plist
+%{_prefix}/lib64/pcsc/drivers/%{name}_linux_%{buildarch}-v%{version}.bundle/Contents/Linux/ifdokccid.so
 
 %post
 patch -p1 %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist < %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist.patch1
