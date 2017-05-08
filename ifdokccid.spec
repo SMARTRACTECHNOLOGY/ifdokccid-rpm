@@ -10,10 +10,11 @@ Packager:       Smartrac Technology Fletcher, Inc.
 URL:            https://www.hidglobal.com
 BuildArch:      x86_64
 
-Source0:        https://www.hidglobal.com/sites/default/files/drivers/%{name}_linux_%{buildarch}-v%{version}.tar.gz
+Source0:        https://www.hidglobal.com/sites/default/files/drivers/%{name}_linux_x86_64-v%{version}.tar.gz
 Source1:        Info.plist.patch1
 
 Requires:       bash
+Requires:       patch
 Requires:       libusb
 Requires:       pcsc-lite
 BuildRequires:  systemd
