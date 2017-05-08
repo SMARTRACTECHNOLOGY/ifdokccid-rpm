@@ -22,6 +22,8 @@ Requires:       pcsc-tools
 Requires:       java >= 1.8
 BuildRequires:  systemd
 
+%define debug_package %{nil}
+
 %description
 Lifecycles HID OMNIKEY 5421 PCSC Drivers and PCSC Configuration
 
@@ -42,17 +44,38 @@ echo "Nothing to build"
 %install
 
 # Install HID OMNIKey Drivers
-./install
+#./install
 
-# Create PCSC driver data directory
-install -d -m777 -p %{buildroot}/usr/lib64/pcsc/drivers/ifd-ccid.bundle/Contents
+#
+# Install the omnikey.ini file
+#
+install -d -m755 -p %{buildroot}/%{_sysconfdir}
+install -m600 %{_builddir}/%{name}-%{version}/omnikey.ini %{buildroot}/%{_sysconfdir}/omnikey.ini
 
+#
+# Install the bundle
+#
+install -d -m775 -p %{buildroot}/usr/lib64/pcsc/drivers/
+cp -r %{_builddir}/%{name}-%{version}/%{name}-%{version}.bundle %{buildroot}/usr/lib64/pcsc/drivers/
+
+#
+# Install udev rules
+#
+install -d -m755 -p %{buildroot}/%{_sysconfdir}/udev/rules.d/
+install -m600 %{_builddir}/%{name}-%{version}/z98_omnikey.rules %{buildroot}/%{_sysconfdir}/udev/rules.d/z98_omnikey.rules
+
+#
 # Copy corrected Info.plist to PCSC driver data directory
-install -m644 %{_sourcedir}/Info.plist %{buildroot}/usr/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist
-
+#
+install -d -m755 -p %{buildroot}/%{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents
+install -m644 %{_sourcedir}/Info.plist %{buildroot}/%{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist
 
 %files
-/usr/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist
+%{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist
+%{_sysconfdir}/omnikey.ini
+%{_sysconfdir}/udev/rules.d/z98_omnikey.rules
+%{_prefix}/lib64/pcsc/drivers/%{name}-%{version}/%{name}-%{version}.bundle/Contents/Info.plist
+%{_prefix}/lib64/pcsc/drivers/%{name}-%{version}/%{name}-%{version}.bundle/Contents/Linux/ifdokccid.so
 
 %post
 %systemd_post pcscd.service
@@ -62,7 +85,6 @@ install -m644 %{_sourcedir}/Info.plist %{buildroot}/usr/lib64/pcsc/drivers/ifd-c
 
 %postun
 %systemd_postun_with_restart pcscd.service
-
 
 %changelog
 * Sun Apr 16 2017 Robert Van Voorhees <robert.vanvoorhees@smartrac-group.com> - 1-1
