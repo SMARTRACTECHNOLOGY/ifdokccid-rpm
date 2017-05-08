@@ -42,6 +42,7 @@ install -m644 %{_topdir}/Info.plist %{_sourcedir}
 echo "Nothing to build"
 
 %install
+QA_RPATHS=$(( 0x0001|0x0002|0x0010 ))
 
 # Install HID OMNIKey Drivers
 #./install
@@ -74,8 +75,8 @@ install -m644 %{_sourcedir}/Info.plist %{buildroot}/%{_prefix}/lib64/pcsc/driver
 %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist
 %{_sysconfdir}/omnikey.ini
 %{_sysconfdir}/udev/rules.d/z98_omnikey.rules
-%{_prefix}/lib64/pcsc/drivers/%{name}-%{version}/%{name}-%{version}.bundle/Contents/Info.plist
-%{_prefix}/lib64/pcsc/drivers/%{name}-%{version}/%{name}-%{version}.bundle/Contents/Linux/ifdokccid.so
+%{_prefix}/lib64/pcsc/drivers/%{name}-%{version}.bundle/Contents/Info.plist
+%{_prefix}/lib64/pcsc/drivers/%{name}-%{version}.bundle/Contents/Linux/ifdokccid.so
 
 %post
 %systemd_post pcscd.service
