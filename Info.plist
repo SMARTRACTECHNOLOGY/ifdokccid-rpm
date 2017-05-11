@@ -380,6 +380,7 @@
 		<string>0x076B</string>
 		<string>0x076B</string>
 		<string>0x076B</string>
+		<string>0x076B</string>
 		<string>0x04DA</string>
 		<string>0x0471</string>
 		<string>0x04B9</string>
@@ -747,6 +748,7 @@
 		<string>0x1021</string>
 		<string>0x4321</string>
 		<string>0x5321</string>
+		<string>0x5421</string>
 		<string>0x6321</string>
 		<string>0x3022</string>
 		<string>0x3621</string>
@@ -1123,6 +1125,7 @@
 		<string>OMNIKEY CardMan 1021</string>
 		<string>OMNIKEY CardMan 4321</string>
 		<string>OMNIKEY CardMan 5321</string>
+		<string>OMNIKEY 5421</string>
 		<string>OMNIKEY 6321 CLi USB</string>
 		<string>OMNIKEY AG 3121 USB</string>
 		<string>OMNIKEY AG CardMan 3621</string>

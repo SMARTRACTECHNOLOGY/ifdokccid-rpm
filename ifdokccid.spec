@@ -34,6 +34,7 @@ echo "Prep ..."
 %setup -q -n %{name}_linux_%{buildarch}-v%{version}
 
 #install -m644 %{_topdir}/Info.plist.patch1 %{_sourcedir}
+#install -m644 %{_topdir}/Info.plist.fixed %{_sourcedir}
 
 %build
 echo "Nothing to build"
@@ -65,15 +66,26 @@ install -m600 %{_builddir}/%{name}_linux_%{buildarch}-v%{version}/z98_omnikey.ru
 install -d -m755 -p %{buildroot}/%{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents
 install -m644 %{_sourcedir}/Info.plist.patch1 %{buildroot}/%{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist.patch1
 
+#install -m644 %{_topdir}/Info.plist.fixed %{_sourcedir}
+#install -m644 %{_sourcedir}/Info.plist %{buildroot}/%{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist
+install -m644 %{_sourcedir}/Info.plist.fixed %{buildroot}/%{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist.fixed
+
+
 %files
 %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist.patch1
+%{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist.fixed
 %{_sysconfdir}/omnikey.ini
 %{_sysconfdir}/udev/rules.d/z98_omnikey.rules
 %{_prefix}/lib64/pcsc/drivers/%{name}_linux_%{buildarch}-v%{version}.bundle/Contents/Info.plist
 %{_prefix}/lib64/pcsc/drivers/%{name}_linux_%{buildarch}-v%{version}.bundle/Contents/Linux/ifdokccid.so
 
 %post
-patch -p1 %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist < %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist.patch1
+# patch -p1 %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist < %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist.patch1
+# Make a backup
+cp %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist.orig
+# Copy the Info.plist.fixed file over the Info.plist
+cp %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist.fixed %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist
+chmod 644 %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist
 %systemd_post pcscd.service
 
 %preun
