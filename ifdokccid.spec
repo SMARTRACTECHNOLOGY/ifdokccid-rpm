@@ -1,6 +1,6 @@
 Name:           ifdokccid
 Version:        4.0.5.5
-Release:        1
+Release:        3
 Summary:        HID OMNIKEY 5421 PCSC Drivers Configuration
 
 Group:          System Environment/Base
@@ -11,7 +11,7 @@ URL:            https://www.hidglobal.com
 BuildArch:      x86_64
 
 Source0:        https://www.hidglobal.com/sites/default/files/drivers/%{name}_linux_x86_64-v%{version}.tar.gz
-Source1:        Info.plist.patch1
+Source1:        Info.plist.fixed
 
 Requires:       bash
 Requires:       patch
@@ -64,7 +64,6 @@ install -m600 %{_builddir}/%{name}_linux_%{buildarch}-v%{version}/z98_omnikey.ru
 # Copy corrected Info.plist to PCSC driver data directory
 #
 install -d -m755 -p %{buildroot}/%{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents
-install -m644 %{_sourcedir}/Info.plist.patch1 %{buildroot}/%{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist.patch1
 
 #install -m644 %{_topdir}/Info.plist.fixed %{_sourcedir}
 #install -m644 %{_sourcedir}/Info.plist %{buildroot}/%{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist
@@ -72,7 +71,6 @@ install -m644 %{_sourcedir}/Info.plist.fixed %{buildroot}/%{_prefix}/lib64/pcsc/
 
 
 %files
-%{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist.patch1
 %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist.fixed
 %{_sysconfdir}/omnikey.ini
 %{_sysconfdir}/udev/rules.d/z98_omnikey.rules
@@ -95,5 +93,8 @@ chmod 644 %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist
 %systemd_postun_with_restart pcscd.service
 
 %changelog
+* Fri May 19 2017 Robert Van Voorhees <robert.vanvoorhees@smartrac-group.com> - 4.0.5.5-3
+- Remove unused patch, properly identify Source1, increment release to facilitate proper upgrading.
+
 * Sun Apr 16 2017 Robert Van Voorhees <robert.vanvoorhees@smartrac-group.com> - 1-1
 - Initial RPM release
