@@ -28,6 +28,7 @@ NOTE: This assumes you already copied the `build-rpm.sh` script from https://git
 
 [source, bash]
 ----
+spectool -g *.spec
 build-rpm
 ----
 

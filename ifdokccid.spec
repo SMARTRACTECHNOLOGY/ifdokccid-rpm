@@ -72,8 +72,8 @@ install -m644 %{_sourcedir}/Info.plist.fixed %{buildroot}/%{_prefix}/lib64/pcsc/
 #
 # Copy 90-default-privs.rules to /usr/share/polkit-1/rules.d
 #
-
-install -m644 %{_sourcedir}/90-default-privs.rules %{buildroot}/%{_prefix}/usr/share/polkit-1/rules.d/90-default-privs.rules
+install -d -m755 -p %{buildroot}/%{_prefix}/share/polkit-1/rules.d
+install -m644 %{_sourcedir}/90-default-privs.rules %{buildroot}/%{_prefix}/share/polkit-1/rules.d/90-default-privs.rules
 
 %files
 %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist.fixed
@@ -81,7 +81,7 @@ install -m644 %{_sourcedir}/90-default-privs.rules %{buildroot}/%{_prefix}/usr/s
 %{_sysconfdir}/udev/rules.d/z98_omnikey.rules
 %{_prefix}/lib64/pcsc/drivers/%{name}_linux_%{buildarch}-v%{version}.bundle/Contents/Info.plist
 %{_prefix}/lib64/pcsc/drivers/%{name}_linux_%{buildarch}-v%{version}.bundle/Contents/Linux/ifdokccid.so
-%{_prefix}/usr/share/polkit-1/rules.d/90-default-privs.rules
+%{_prefix}/share/polkit-1/rules.d/90-default-privs.rules
 
 %post
 # patch -p1 %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist < %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist.patch1
@@ -99,11 +99,11 @@ chmod 644 %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist
 %systemd_postun_with_restart pcscd.service
 
 %changelog
+* Wed May 31 2017 Joe Chromo <joe.chromo@smartrac-group.com> - 1-1
+- Added 90-default-privs.rules to provision access to hid reader to smartcomsos user
+
 * Fri May 19 2017 Robert Van Voorhees <robert.vanvoorhees@smartrac-group.com> - 4.0.5.5-3
 - Remove unused patch, properly identify Source1, increment release to facilitate proper upgrading.
 
 * Sun Apr 16 2017 Robert Van Voorhees <robert.vanvoorhees@smartrac-group.com> - 1-1
 - Initial RPM release
-
-* Wed May 32 2017 Joe Chromo <joe.chromo@smartrac-group.com> - 1-1
-- Added 90-default-privs.rules to provision access to hid reader to smartcomsos user
