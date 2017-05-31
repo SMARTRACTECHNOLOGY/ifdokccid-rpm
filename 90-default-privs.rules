@@ -1,3 +1,5 @@
+//note that instead of subject.user, we could use subject.isInGroup("some_group")
+
 polkit.addRule(function(action, subject) {
     if (action.id == "org.debian.pcsc-lite.access_pcsc" &&
         subject.user == "smartcosmos") {
