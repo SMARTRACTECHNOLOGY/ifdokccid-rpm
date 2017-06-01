@@ -84,6 +84,7 @@ install -m644 %{_sourcedir}/90-default-privs.rules %{buildroot}/%{_prefix}/share
 %{_prefix}/share/polkit-1/rules.d/90-default-privs.rules
 
 %post
+getent group hidreader >/dev/null || groupadd -r hidreader
 # patch -p1 %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist < %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist.patch1
 # Make a backup
 cp %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist.orig
