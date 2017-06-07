@@ -1,6 +1,6 @@
 Name:           ifdokccid
 Version:        4.0.5.5
-Release:        3
+Release:        4
 Summary:        HID OMNIKEY 5421 PCSC Drivers Configuration
 
 Group:          System Environment/Base
