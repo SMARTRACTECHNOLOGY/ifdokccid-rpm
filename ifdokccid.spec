@@ -1,6 +1,6 @@
 Name:           ifdokccid
-Version:        4.0.5.5
-Release:        4
+Version:        4.2.8
+Release:        1
 Summary:        HID OMNIKEY 5421 PCSC Drivers Configuration
 
 Group:          System Environment/Base
@@ -81,15 +81,17 @@ install -m644 %{_sourcedir}/90-default-privs.rules %{buildroot}/%{_prefix}/share
 %{_sysconfdir}/udev/rules.d/z98_omnikey.rules
 %{_prefix}/lib64/pcsc/drivers/%{name}_linux_%{buildarch}-v%{version}.bundle/Contents/Info.plist
 %{_prefix}/lib64/pcsc/drivers/%{name}_linux_%{buildarch}-v%{version}.bundle/Contents/Linux/ifdokccid.so
+%{_prefix}/lib64/pcsc/drivers/%{name}_linux_%{buildarch}-v%{version}.bundle/Contents/tools/ifdok_bugreport
+%{_prefix}/lib64/pcsc/drivers/%{name}_linux_%{buildarch}-v%{version}.bundle/Contents/tools/ifdok_xmled
 %{_prefix}/share/polkit-1/rules.d/90-default-privs.rules
 
 %post
 getent group hidreader >/dev/null || groupadd -r hidreader
 # patch -p1 %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist < %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist.patch1
 # Make a backup
-cp %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist.orig
-# Copy the Info.plist.fixed file over the Info.plist
-cp %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist.fixed %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist
+#cp %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist.orig
+## Copy the Info.plist.fixed file over the Info.plist
+#cp %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist.fixed %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist
 chmod 644 %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist
 %systemd_post pcscd.service
 
@@ -100,6 +102,9 @@ chmod 644 %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist
 %systemd_postun_with_restart pcscd.service
 
 %changelog
+* Tue Jun 20 2017 Robert Van Voorhees <robert.vanvoorhees@smartrac-group.com> - 4.2.8-1
+- Creating an updated version of the drivers.
+
 * Wed May 31 2017 Joe Chromo <joe.chromo@smartrac-group.com> - 1-1
 - Added 90-default-privs.rules to provision access to hid reader to smartcomsos user
 
