@@ -1,6 +1,6 @@
 Name:           ifdokccid
 Version:        4.2.8
-Release:        1
+Release:        4
 Summary:        HID OMNIKEY 5421 PCSC Drivers Configuration
 
 Group:          System Environment/Base
@@ -11,7 +11,6 @@ URL:            https://www.hidglobal.com
 BuildArch:      x86_64
 
 Source0:        https://www.hidglobal.com/sites/default/files/drivers/%{name}_linux_x86_64-v%{version}.tar.gz
-Source1:        Info.plist.fixed
 
 Requires:       bash
 Requires:       patch
@@ -51,8 +50,10 @@ install -m600 %{_builddir}/%{name}_linux_%{buildarch}-v%{version}/omnikey.ini %{
 #
 # Install the bundle
 #
-install -d -m775 -p %{buildroot}/usr/lib64/pcsc/drivers/
-cp -r %{_builddir}/%{name}_linux_%{buildarch}-v%{version}/%{name}_linux_%{buildarch}-v%{version}.bundle %{buildroot}/usr/lib64/pcsc/drivers/
+install -d -m775 -p %{buildroot}/usr/lib64/pcsc/drivers/ifd-ccid.bundle/
+cp -r %{_builddir}/%{name}_linux_%{buildarch}-v%{version}/%{name}_linux_%{buildarch}-v%{version}.bundle/Contents %{buildroot}/usr/lib64/pcsc/drivers/ifd-ccid.bundle/
+# Relocate the Info.plist to avoid overwriting
+mv %{buildroot}/usr/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist %{buildroot}/usr/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist.fixed
 
 #
 # Install udev rules
@@ -65,10 +66,6 @@ install -m600 %{_builddir}/%{name}_linux_%{buildarch}-v%{version}/z98_omnikey.ru
 #
 install -d -m755 -p %{buildroot}/%{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents
 
-#install -m644 %{_topdir}/Info.plist.fixed %{_sourcedir}
-#install -m644 %{_sourcedir}/Info.plist %{buildroot}/%{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist
-install -m644 %{_sourcedir}/Info.plist.fixed %{buildroot}/%{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist.fixed
-
 #
 # Copy 90-default-privs.rules to /usr/share/polkit-1/rules.d
 #
@@ -76,32 +73,49 @@ install -d -m755 -p %{buildroot}/%{_prefix}/share/polkit-1/rules.d
 install -m644 %{_sourcedir}/90-default-privs.rules %{buildroot}/%{_prefix}/share/polkit-1/rules.d/90-default-privs.rules
 
 %files
-%{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist.fixed
 %{_sysconfdir}/omnikey.ini
 %{_sysconfdir}/udev/rules.d/z98_omnikey.rules
-%{_prefix}/lib64/pcsc/drivers/%{name}_linux_%{buildarch}-v%{version}.bundle/Contents/Info.plist
-%{_prefix}/lib64/pcsc/drivers/%{name}_linux_%{buildarch}-v%{version}.bundle/Contents/Linux/ifdokccid.so
-%{_prefix}/lib64/pcsc/drivers/%{name}_linux_%{buildarch}-v%{version}.bundle/Contents/tools/ifdok_bugreport
-%{_prefix}/lib64/pcsc/drivers/%{name}_linux_%{buildarch}-v%{version}.bundle/Contents/tools/ifdok_xmled
+%{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist.fixed
+%{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Linux/ifdokccid.so
+%{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/tools/ifdok_bugreport
+%{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/tools/ifdok_xmled
 %{_prefix}/share/polkit-1/rules.d/90-default-privs.rules
 
 %post
 getent group hidreader >/dev/null || groupadd -r hidreader
 # patch -p1 %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist < %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist.patch1
 # Make a backup
-#cp %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist.orig
-## Copy the Info.plist.fixed file over the Info.plist
-#cp %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist.fixed %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist
+cp %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist.rpmnew.%{version}
+# Copy the Info.plist.fixed file over the Info.plist
+cp %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist.fixed %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist
 chmod 644 %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist
+
+# Handle issue where previous folder structure is not removed:
+rm -rf /usr/lib64/pcsc/drivers/ifdokccid_linux_x86_64-v4.0.5.5.bundle
+rm -rf /usr/lib64/pcsc/drivers/ifdokccid_linux_x86_64-v4.2.8.bundle
+
 %systemd_post pcscd.service
 
 %preun
 %systemd_preun pcscd.service
 
 %postun
+# Move back original file.
+cp %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist.rpmnew.%{version} %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist
+rm -rf %{_prefix}/lib64/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist.rpmnew.%{version}
+
 %systemd_postun_with_restart pcscd.service
 
 %changelog
+* Tue Jun 20 2017 Robert Van Voorhees <robert.vanvoorhees@smartrac-group.com> - 4.2.8-4
+- Try and more closely resemble ifd-ccid.bundle
+
+* Tue Jun 20 2017 Robert Van Voorhees <robert.vanvoorhees@smartrac-group.com> - 4.2.8-3
+- Remove the folder structures on RPM uninstall.
+
+* Tue Jun 20 2017 Robert Van Voorhees <robert.vanvoorhees@smartrac-group.com> - 4.2.8-2
+- Overwrite the old Info.plist in a similar fashion.
+
 * Tue Jun 20 2017 Robert Van Voorhees <robert.vanvoorhees@smartrac-group.com> - 4.2.8-1
 - Creating an updated version of the drivers.
 
